@@ -27,22 +27,23 @@ const SearchParams = () => {
     */
 
     return (
-        <div className="search-params">
-            <form onSubmit={e => {
-                e.preventDefault();
-                /*The new FormData below what does is not something from react. It's a browser API.
-                It will pull out all the data in a form in an object.
-                */
-                const formData = new FormData(e.target);
+        <div className="my-0 mx-auto w-11/12">
+            <form className="p-10 mb-10 rounded-lg bg-gray-200 shadow-lg flex flex-col justify-center items-center"
+                onSubmit={e => {
+                    e.preventDefault();
+                    /*The new FormData below what does is not something from react. It's a browser API.
+                    It will pull out all the data in a form in an object.
+                    */
+                    const formData = new FormData(e.target);
 
-                const obj = {
-                    animal: formData.get("animal") ?? '',
-                    location: formData.get("location") ?? '',
-                    breed: formData.get("breed") ?? ''
-                }
+                    const obj = {
+                        animal: formData.get("animal") ?? '',
+                        location: formData.get("location") ?? '',
+                        breed: formData.get("breed") ?? ''
+                    }
 
-                setRequestParams(obj)
-            }}>
+                    setRequestParams(obj)
+                }}>
                 {
                     adoptedPet ? (
                         <div className="pet image-container">
@@ -52,11 +53,11 @@ const SearchParams = () => {
                 }
                 <label htmlFor="location">
                     Location
-                    <input name="location" placeholder="Location" id="location" />
+                    <input className="search-input" type="text" name="location" placeholder="Location" id="location" />
                 </label>
                 <label htmlFor="animal">
                     Animal
-                    <select id="animal" value={animal} onChange={e => {
+                    <select className="search-input" id="animal" value={animal} onChange={e => {
                         setAnimal(e.target.value);
 
                     }} onBlur={(e) => {
@@ -72,14 +73,14 @@ const SearchParams = () => {
                 </label>
                 <label htmlFor="breed">
                     Breed
-                    <select disabled={!breeds.length} id="breed" name="breed">
+                    <select className="search-input grayed-out-disabled" disabled={!breeds.length} id="breed" name="breed">
                         {breeds.map((breed) => (
                             <option key={breed} value={breed}>{breed}</option>
                         )
                         )}
                     </select>
                 </label>
-                <button>Submit</button>
+                <button className="rounded px-6 py-2 text-white hover:opacity-50 border-none bg-orange-500">Submit</button>
             </form>
             <Results pets={pets} />
         </div>
