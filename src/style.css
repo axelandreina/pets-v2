@@ -10,7 +10,7 @@
 
 @layer components {
   .search-input {
-    @apply mb-5 block w-60;
+    @apply block mb-5 w-60;
   }
 }
 
@@ -61,4 +61,8 @@
 #modal .buttons button {
   display: inline-block;
   margin-right: 15px;
+}
+
+.mini.loading-pane {
+  height: 34px;
 }

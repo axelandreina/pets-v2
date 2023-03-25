@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useDeferredValue, useMemo, useTransition } from "react";
 import { useQuery } from "@tanstack/react-query";
 import fetchSearch from "./fetchSearch";
 import AdoptedPetContext from "./AdoptedPetContex";
@@ -15,20 +15,24 @@ const SearchParams = () => {
 
     const [animal, setAnimal] = useState("");
     const [breeds] = useBreedList(animal);
+    const [isPending, startTransition] = useTransition();
+
     const [adoptedPet] = useContext(AdoptedPetContext);
 
     const results = useQuery(["search", requestParams], fetchSearch)
     const pets = results?.data?.pets ?? [];
+    const deferredPets = useDeferredValue(pets);
+    const renderedPets = useMemo(() => <Results pets={deferredPets} />, [deferredPets])
 
     /* This is what is happening with the line above:
-        const locationHook = useState("")
+        const locationHook = useState("") 
         const location = locationHook[0];
         const setLocation = locationHook[1];
     */
 
     return (
-        <div className="my-0 mx-auto w-11/12">
-            <form className="p-10 mb-10 rounded-lg bg-gray-200 shadow-lg flex flex-col justify-center items-center"
+        <div className="w-11/12 mx-auto my-0">
+            <form className="flex flex-col items-center justify-center p-10 mb-10 bg-gray-200 rounded-lg shadow-lg"
                 onSubmit={e => {
                     e.preventDefault();
                     /*The new FormData below what does is not something from react. It's a browser API.
@@ -41,8 +45,8 @@ const SearchParams = () => {
                         location: formData.get("location") ?? '',
                         breed: formData.get("breed") ?? ''
                     }
+                    startTransition(() => setRequestParams(obj))
 
-                    setRequestParams(obj)
                 }}>
                 {
                     adoptedPet ? (
@@ -80,9 +84,10 @@ const SearchParams = () => {
                         )}
                     </select>
                 </label>
-                <button className="rounded px-6 py-2 text-white hover:opacity-50 border-none bg-orange-500">Submit</button>
+                {isPending ? (<div className="mini loading-pane"><h2 className="loader">🤔</h2></div>) : <button className="px-6 py-2 text-white bg-orange-500 border-none rounded hover:opacity-50">Submit</button>
+                }
             </form>
-            <Results pets={pets} />
+            {renderedPets}
         </div>
     )
 }
