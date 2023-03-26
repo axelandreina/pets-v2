@@ -1,11 +1,10 @@
 import { useState, useContext, lazy } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import AdoptedPetContext from "./AdoptedPetContex";
+import AdoptedPetContext from "./AdoptedPetContext";
 import ErrorBoundary from "./ErrorBoundary";
 import fetchPet from "./fetchPet";
 import Carousel from "./Carousel";
-import { PetAPIResponse } from "./APIResponsesTypes";
 
 // This is just to show how to split the modal. It's not really needed because its size is vary small.
 const Modal = lazy(() => import("./Modal"));
@@ -21,7 +20,7 @@ const Details = () => {
     throw new Error("Give me an id!");
   }
 
-  const results = useQuery<PetAPIResponse>(["details", id], fetchPet);
+  const results = useQuery(["details", id], fetchPet);
 
   if (results.isLoading) {
     return (
@@ -38,7 +37,7 @@ const Details = () => {
 
   return (
     <div className="m-4 grid grid-cols-3 gap-6">
-      <Carousel className="col-span-1" images={pet.images} />
+      <Carousel images={pet.images} />
       <div className="col-span-2">
         <h1 className="text-4xl font-semibold">{pet.name} </h1>
         <h2 className="mb-2 font-extralight">
